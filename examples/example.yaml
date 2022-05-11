@@ -1,0 +1,10 @@
+apiVersion: github.krateo.io/v1alpha1
+kind: Repo
+metadata:
+  name: github-provider-example
+spec:
+  forProvider:
+    org: lucasepe
+    name: cancellami
+  providerConfigRef:
+    name: provider-github-config

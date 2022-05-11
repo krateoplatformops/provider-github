@@ -1,0 +1,13 @@
+apiVersion: meta.pkg.crossplane.io/v1
+kind: Provider
+metadata:
+  namespace: crossplane-system
+  name: crossplane-provider-github
+  annotations:
+    meta.crossplane.io/description: |
+      The Krateo PlatformOps GitHub provider creates a git repository on GitHub if does not exists.
+    # A 'human-friendly' name for this package.
+    friendly-name.meta.crossplane.io: "Krateo PlatformOps GitHub Provider"
+spec:
+  controller:
+    image: ghcr.io/krateoplatformops/provider-github:VERSION

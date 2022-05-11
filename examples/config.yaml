@@ -1,0 +1,13 @@
+apiVersion: github.krateo.io/v1alpha1
+kind: ProviderConfig
+metadata:
+  name: provider-github-config
+spec:
+  apiUrl: https://api.github.com
+  verbose: false
+  credentials:
+    source: Secret
+    secretRef:
+      namespace: default
+      name: github-secret
+      key: token
