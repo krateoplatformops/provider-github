@@ -4,7 +4,7 @@ metadata:
   name: github-provider-example
 spec:
   forProvider:
-    org: lucasepe
-    name: cancellami
+    org: krateoplatformops
+    name: demo-repo
   providerConfigRef:
-    name: provider-github-config
+    name: github-provider-config
