@@ -42,9 +42,9 @@ jobs:
         with:
           channel: ${{ github.event.inputs.channel }}
           version: ${{ github.event.inputs.version }}
-          command: build provider -f package --name=crossplane-${{ github.event.repository.name }}
+          command: build provider -f package --name=${{ github.event.repository.name }}
         
       - name: Push xpkg
         uses: crossplane-contrib/xpkg-action@master
         with:
-          command: push provider -f package/crossplane-${{ github.event.repository.name }}.xpkg ghcr.io/${{ github.event.repository.owner.name }}/crossplane-${{ github.event.repository.name }}:${{ steps.tagger.outputs.VERSION_TAG }}
+          command: push provider -f package/${{ github.event.repository.name }}.xpkg ghcr.io/${{ github.event.repository.owner.name }}/${{ github.event.repository.name }}:${{ steps.tagger.outputs.VERSION_TAG }}

@@ -83,7 +83,7 @@ kind.down: ## shuts down the KinD cluster
 
 .PHONY: image.build
 image.build: ## build the controller Docker image
-	@$(DOCKER) build -t "$(DOCKER_REGISTRY)/$(PROJECT_NAME):$(VERSION)" \
+	@$(DOCKER) build -t "$(DOCKER_REGISTRY)/$(PROJECT_NAME)-controller:$(VERSION)" \
 	--build-arg METRICS_PORT=9090 \
 	--build-arg VERSION="$(VERSION)" \
 	--build-arg BUILD_DATE="$(BUILD_DATE)" \
@@ -96,7 +96,7 @@ image.build: ## build the controller Docker image
 
 .PHONY: image.push
 image.push: ## Push the Docker image to the Github Registry
-	@$(DOCKER) push "$(DOCKER_REGISTRY)/$(PROJECT_NAME):$(VERSION)"
+	@$(DOCKER) push "$(DOCKER_REGISTRY)/$(PROJECT_NAME)-controller:$(VERSION)"
 
 .PHONY: install.crossplane
 install.crossplane: ## Install Crossplane into the local KinD cluster

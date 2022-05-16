@@ -11,7 +11,7 @@ kind: Provider
 metadata:
   name: krateo-provider-github
 spec:
-  package: 'ghcr.io/krateoplatformops/crossplane-provider-github:VERSION'
+  package: 'ghcr.io/krateoplatformops/provider-github:VERSION'
   packagePullPolicy: Always
   packagePullSecrets:
   - name: cr-token
