@@ -58,7 +58,10 @@ func UseProviderConfig(ctx context.Context, k client.Client, mg resource.Managed
 		return nil, err
 	}
 
-	opts := &github.ClientOpts{Token: token}
+	opts := &github.ClientOpts{
+		ApiURL: pc.Spec.ApiUrl,
+		Token:  token,
+	}
 	opts.HttpClient = defaultClient()
 
 	verbose := helpers.IsBoolPtrEqualToBool(pc.Spec.Verbose, true)

@@ -1,4 +1,4 @@
-# Provider Git
+# Provider GitHub
 
 ## Overview
 
