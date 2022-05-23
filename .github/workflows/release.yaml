@@ -10,12 +10,12 @@ jobs:
     permissions:
       packages: write
       contents: read
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
 
-      - name: Build
+    steps:
+      - name: Git Checkout
+        uses: actions/checkout@v3
+
+      - name: Build Controller
         run: make image.build
       
       - name: Login to CR
@@ -25,26 +25,26 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Package
+      - name: Push Controller
         run: make image.push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
-      - name: Set tag
+      - name: Store version tag
         run: echo "::set-output name=VERSION_TAG::$(git describe --dirty --always --tags | sed 's/-/./2' | sed 's/-/./2' )"
         id: tagger
 
       - name: Replace Version in xpkg manifest
         run: sed -i 's/VERSION/${{ steps.tagger.outputs.VERSION_TAG }}/g' package/crossplane.yaml
       
-      - name: Build xpkg
+      - name: Build Crossplane Package
         uses: crossplane-contrib/xpkg-action@master
         with:
           channel: ${{ github.event.inputs.channel }}
           version: ${{ github.event.inputs.version }}
           command: build provider -f package --name=${{ github.event.repository.name }}
         
-      - name: Push xpkg
+      - name: Push Crossplane Package
         uses: crossplane-contrib/xpkg-action@master
         with:
           command: push provider -f package/${{ github.event.repository.name }}.xpkg ghcr.io/${{ github.event.repository.owner.name }}/${{ github.event.repository.name }}:${{ steps.tagger.outputs.VERSION_TAG }}

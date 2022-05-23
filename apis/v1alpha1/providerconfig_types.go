@@ -36,12 +36,11 @@ type ProviderConfigStatus struct {
 }
 
 // +kubebuilder:object:root=true
-// +kubebuilder:resource:scope=Namespace
 
 // A ProviderConfig configures a Template provider.
 // +kubebuilder:printcolumn:name="AGE",type="date",JSONPath=".metadata.creationTimestamp"
 // +kubebuilder:printcolumn:name="DEBUG",type=boolean,JSONPath=".spec.debug",priority=1
-// +kubebuilder:resource:scope=Cluster,categories={crossplane,provider,git}
+// +kubebuilder:resource:scope=Cluster,categories={crossplane,provider,github}
 // +kubebuilder:subresource:status
 type ProviderConfig struct {
 	metav1.TypeMeta   `json:",inline"`
@@ -52,7 +51,6 @@ type ProviderConfig struct {
 }
 
 // +kubebuilder:object:root=true
-// +kubebuilder:resource:scope=Namespace
 
 // ProviderConfigList contains a list of ProviderConfig.
 type ProviderConfigList struct {
@@ -62,7 +60,6 @@ type ProviderConfigList struct {
 }
 
 // +kubebuilder:object:root=true
-// +kubebuilder:resource:scope=Namespace
 
 // A ProviderConfigUsage indicates that a resource is using a ProviderConfig.
 // +kubebuilder:printcolumn:name="AGE",type="date",JSONPath=".metadata.creationTimestamp"
@@ -78,7 +75,6 @@ type ProviderConfigUsage struct {
 }
 
 // +kubebuilder:object:root=true
-// +kubebuilder:resource:scope=Namespace
 
 // ProviderConfigUsageList contains a list of ProviderConfigUsage
 type ProviderConfigUsageList struct {

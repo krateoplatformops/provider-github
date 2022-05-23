@@ -41,13 +41,12 @@ type RepoStatus struct {
 }
 
 // +kubebuilder:object:root=true
-// +kubebuilder:resource:scope=Namespace
 
 // A Repo is a managed resource that represents a Krateo GitHub Repository
 // +kubebuilder:printcolumn:name="READY",type="string",JSONPath=".status.conditions[?(@.type=='Ready')].status"
 // +kubebuilder:printcolumn:name="SYNCED",type="string",JSONPath=".status.conditions[?(@.type=='Synced')].status"
 // +kubebuilder:subresource:status
-// +kubebuilder:resource:scope=Cluster,categories={crossplane,managed,git}
+// +kubebuilder:resource:scope=Cluster,categories={crossplane,krateo,github}
 type Repo struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
@@ -57,7 +56,6 @@ type Repo struct {
 }
 
 // +kubebuilder:object:root=true
-// +kubebuilder:resource:scope=Namespace
 
 // RepoList contains a list of Repo.
 type RepoList struct {

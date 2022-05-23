@@ -11,8 +11,8 @@ spec:
   names:
     categories:
     - crossplane
-    - managed
-    - git
+    - krateo
+    - github
     kind: Repo
     listKind: RepoList
     plural: repoes

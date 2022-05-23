@@ -1,7 +1,8 @@
 apiVersion: pkg.crossplane.io/v1
 kind: Provider
 metadata:
+  namespace: crossplane-system
   name: krateo-provider-github
 spec:
-  package: 'ghcr.io/krateoplatformops/provider-github:v0.1.2'
+  package: 'ghcr.io/krateoplatformops/provider-github:VERSION'
   packagePullPolicy: IfNotPresent
