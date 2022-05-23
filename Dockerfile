@@ -3,16 +3,12 @@
 FROM golang:1.18.0-bullseye as builder
 LABEL stage=builder
 
-ARG upx_version=3.96
 ARG DEBIAN_FRONTEND=noninteractive
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 # hadolint ignore=DL3008
 RUN apt-get update && apt-get install -y ca-certificates openssl git tzdata && apt-get install -y --no-install-recommends xz-utils && \
   update-ca-certificates && \
-  curl -Ls https://github.com/upx/upx/releases/download/v${upx_version}/upx-${upx_version}-amd64_linux.tar.xz -o - | tar xvJf - -C /tmp && \
-  cp /tmp/upx-${upx_version}-amd64_linux/upx /usr/local/bin/ && \
-  chmod +x /usr/local/bin/upx && \
   apt-get remove -y xz-utils && \
   rm -rf /var/lib/apt/lists/*
 
@@ -30,8 +26,7 @@ COPY pkg/ pkg/
 
 # Build
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 GO111MODULE=on go build -a -o /bin/controller cmd/main.go && \
-    strip /bin/controller && \
-    /usr/local/bin/upx -9 /bin/controller
+    strip /bin/controller
 
 # Deployment environment
 # ----------------------
