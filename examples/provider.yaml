@@ -3,5 +3,5 @@ kind: Provider
 metadata:
   name: krateo-provider-github
 spec:
-  package: 'ghcr.io/krateoplatformops/provider-github:VERSION'
+  package: 'ghcr.io/krateoplatformops/provider-github:v0.1.2'
   packagePullPolicy: IfNotPresent

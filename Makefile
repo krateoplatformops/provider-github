@@ -106,15 +106,8 @@ install.crossplane: ## Install Crossplane into the local KinD cluster
 	helm install crossplane --namespace crossplane-system crossplane-stable/crossplane
 
 
-.PHONY: cr.secret
-cr.secret: ## Create the secret for container registry credentials
-	$(KUBECTL) create secret docker-registry cr-token \
-	--namespace crossplane-system --docker-server=ghcr.io \
-	--docker-password=$(PROVIDER_GIT) --docker-username=$(ORG_NAME) || true
-
-
 .PHONY: install.provider
-install.provider: cr.secret ## Install this provider
+install.provider: ## Install this provider
 	@$(SED) 's/VERSION/$(VERSION)/g' ./examples/provider.yaml | $(KUBECTL) apply -f -
 
 .PHONY: example.secrets
