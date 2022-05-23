@@ -9,4 +9,4 @@ metadata:
     friendly-name.meta.crossplane.io: "Krateo PlatformOps GitHub Provider"
 spec:
   controller:
-    image: ghcr.io/krateoplatformops/provider-github:VERSION
+    image: ghcr.io/krateoplatformops/provider-github-controller:VERSION
