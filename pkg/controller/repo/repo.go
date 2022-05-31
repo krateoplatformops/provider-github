@@ -8,15 +8,14 @@ import (
 	xpv1 "github.com/crossplane/crossplane-runtime/apis/common/v1"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/client-go/tools/record"
-	"k8s.io/client-go/util/workqueue"
 
+	"github.com/crossplane/crossplane-runtime/pkg/controller"
+	"github.com/crossplane/crossplane-runtime/pkg/ratelimiter"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
-	"sigs.k8s.io/controller-runtime/pkg/controller"
 
 	"github.com/crossplane/crossplane-runtime/pkg/event"
 	"github.com/crossplane/crossplane-runtime/pkg/logging"
-	"github.com/crossplane/crossplane-runtime/pkg/ratelimiter"
 	"github.com/crossplane/crossplane-runtime/pkg/reconciler/managed"
 	"github.com/crossplane/crossplane-runtime/pkg/resource"
 
@@ -30,30 +29,31 @@ const (
 )
 
 // Setup adds a controller that reconciles Token managed resources.
-func Setup(mgr ctrl.Manager, l logging.Logger, rl workqueue.RateLimiter) error {
+func Setup(mgr ctrl.Manager, o controller.Options) error {
 	name := managed.ControllerName(repov1alpha1.RepoGroupKind)
 
-	opts := controller.Options{
-		RateLimiter: ratelimiter.NewDefaultManagedRateLimiter(rl),
-	}
+	//opts := controller.Options{
+	//	RateLimiter: ratelimiter.NewDefaultManagedRateLimiter(rl),
+	//}
 
-	log := l.WithValues("controller", name)
+	log := o.Logger.WithValues("controller", name)
 
-	rec := managed.NewReconciler(mgr,
+	r := managed.NewReconciler(mgr,
 		resource.ManagedKind(repov1alpha1.RepoGroupVersionKind),
 		managed.WithExternalConnecter(&connector{
 			kube:     mgr.GetClient(),
 			log:      log,
-			recorder: mgr.GetEventRecorderFor("Repo"),
+			recorder: mgr.GetEventRecorderFor(name),
 		}),
+		managed.WithPollInterval(o.PollInterval),
 		managed.WithLogger(log),
 		managed.WithRecorder(event.NewAPIRecorder(mgr.GetEventRecorderFor(name))))
 
 	return ctrl.NewControllerManagedBy(mgr).
 		Named(name).
-		WithOptions(opts).
+		WithOptions(o.ForControllerRuntime()).
 		For(&repov1alpha1.Repo{}).
-		Complete(rec)
+		Complete(ratelimiter.NewReconciler(name, r, o.GlobalRateLimiter))
 }
 
 type connector struct {
