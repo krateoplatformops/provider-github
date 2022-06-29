@@ -30,9 +30,3 @@ You can found example manifest files here:
 
 - provider config [config.yaml](./examples/config.yaml)
 - crd instance [example.yaml](./examples/example.yaml)
-
----
-
-## Report a Bug
-
-For filing bugs, suggesting improvements, or requesting new features, please open an [issue](https://github.com/krateoplatformops/provider-git/issues).
