@@ -10,7 +10,7 @@ endif
 KIND_CLUSTER_NAME ?= local-dev
 KUBECONFIG ?= $(HOME)/.kube/config
 
-VERSION := $(shell git describe --dirty --always --tags | sed 's/-/./2' | sed 's/-/./2')
+VERSION := $(shell git describe --always --tags | sed 's/-/./2' | sed 's/-/./2')
 ifndef VERSION
 VERSION := 0.0.0
 endif
@@ -19,7 +19,7 @@ endif
 KIND=$(shell which kind)
 LINT=$(shell which golangci-lint)
 KUBECTL=$(shell which kubectl)
-DOCKER=$(shell which docker)
+HELM=$(shell which helm)
 SED=$(shell which sed)
 
 .DEFAULT_GOAL := help
@@ -56,14 +56,27 @@ kind.down: ## shuts down the KinD cluster
 .PHONY: install.crossplane
 install.crossplane: ## Install Crossplane into the local KinD cluster
 	$(KUBECTL) create namespace crossplane-system || true
-	helm repo add crossplane-stable https://charts.crossplane.io/stable
-	helm repo update
-	helm install crossplane --namespace crossplane-system crossplane-stable/crossplane
+	$(HELM) repo add crossplane-stable https://charts.crossplane.io/stable
+	$(HELM) repo update
+	$(HELM) install crossplane --namespace crossplane-system crossplane-stable/crossplane
 
 
 .PHONY: install.provider
 install.provider: ## Install this provider
 	@$(SED) 's/VERSION/$(VERSION)/g' ./examples/provider.yaml | $(KUBECTL) apply -f -
+
+.PHONY: install.eventrouter
+install.eventrouter: ## Install the event router
+	$(HELM) repo add krateo https://charts.krateo.io
+	$(HELM) repo update krateo
+	$(HELM) install --set EVENT_ROUTER_DEBUG=true eventrouter krateo/eventrouter
+
+.PHONY: demo
+demo: ## Run the demo examples
+	@$(KUBECTL) create secret generic github-secret --from-literal=token=$(PROVIDER_GITHUB_DEMO_TOKEN) || true
+	@$(KUBECTL) apply -f examples/demo-config.yaml
+	@$(KUBECTL) apply -f examples/demo-repo.yaml
+
 
 .PHONY: help
 help: ## print this help

@@ -1,7 +1,7 @@
 apiVersion: github.krateo.io/v1alpha1
 kind: ProviderConfig
 metadata:
-  name: github-provider-config
+  name: provider-github-demo-config
 spec:
   apiUrl: https://api.github.com
   verbose: false

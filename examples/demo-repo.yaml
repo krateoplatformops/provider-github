@@ -1,10 +1,10 @@
 apiVersion: github.krateo.io/v1alpha1
 kind: Repo
 metadata:
-  name: github-provider-example
+  name: provider-github-demo
 spec:
   forProvider:
     org: krateoplatformops
     name: demo-repo
   providerConfigRef:
-    name: github-provider-config
+    name: provider-github-demo-config
