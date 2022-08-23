@@ -27,9 +27,11 @@ func Setup(mgr ctrl.Manager, o controller.Options) error {
 		UsageList: v1alpha1.ProviderConfigUsageListGroupVersionKind,
 	}
 
+	recorder := mgr.GetEventRecorderFor(name)
+
 	r := providerconfig.NewReconciler(mgr, of,
 		providerconfig.WithLogger(o.Logger.WithValues("controller", name)),
-		providerconfig.WithRecorder(event.NewAPIRecorder(mgr.GetEventRecorderFor(name))))
+		providerconfig.WithRecorder(event.NewAPIRecorder(recorder)))
 
 	return ctrl.NewControllerManagedBy(mgr).
 		Named(name).

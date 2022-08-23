@@ -3,7 +3,6 @@ package repo
 import (
 	"context"
 	"errors"
-	"fmt"
 
 	xpv1 "github.com/crossplane/crossplane-runtime/apis/common/v1"
 	corev1 "k8s.io/api/core/v1"
@@ -38,16 +37,18 @@ func Setup(mgr ctrl.Manager, o controller.Options) error {
 
 	log := o.Logger.WithValues("controller", name)
 
+	recorder := mgr.GetEventRecorderFor(name)
+
 	r := managed.NewReconciler(mgr,
 		resource.ManagedKind(repov1alpha1.RepoGroupVersionKind),
 		managed.WithExternalConnecter(&connector{
 			kube:     mgr.GetClient(),
 			log:      log,
-			recorder: mgr.GetEventRecorderFor(name),
+			recorder: recorder,
 		}),
 		managed.WithPollInterval(o.PollInterval),
 		managed.WithLogger(log),
-		managed.WithRecorder(event.NewAPIRecorder(mgr.GetEventRecorderFor(name))))
+		managed.WithRecorder(event.NewAPIRecorder(recorder)))
 
 	return ctrl.NewControllerManagedBy(mgr).
 		Named(name).
@@ -105,7 +106,7 @@ func (e *external) Observe(ctx context.Context, mg resource.Managed) (managed.Ex
 
 	if ok {
 		e.log.Debug("Repo already exists", "org", spec.Org, "name", spec.Name)
-		e.rec.Event(cr, corev1.EventTypeNormal, "AlredyExists", fmt.Sprintf("Repo '%s/%s' already exists", spec.Org, spec.Name))
+		e.rec.Eventf(cr, corev1.EventTypeNormal, "AlredyExists", "Repo '%s/%s' already exists", spec.Org, spec.Name)
 
 		cr.SetConditions(xpv1.Available())
 		return managed.ExternalObservation{
@@ -137,7 +138,7 @@ func (e *external) Create(ctx context.Context, mg resource.Managed) (managed.Ext
 		return managed.ExternalCreation{}, err
 	}
 	e.log.Debug("Repo created", "org", spec.Org, "name", spec.Name)
-	e.rec.Event(cr, corev1.EventTypeNormal, "RepoCreated", fmt.Sprintf("Repo '%s/%s' created", spec.Org, spec.Name))
+	e.rec.Eventf(cr, corev1.EventTypeNormal, "RepoCreated", "Repo '%s/%s' created", spec.Org, spec.Name)
 
 	return managed.ExternalCreation{}, nil
 }

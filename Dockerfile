@@ -37,23 +37,6 @@ COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 
 COPY --from=builder /bin/controller /bin/controller
 
-# Metadata params
-ARG VERSION
-ARG BUILD_DATE
-ARG REPO_URL
-ARG LAST_COMMIT
-ARG PROJECT_NAME
-ARG VENDOR
-
-# Metadata
-LABEL org.label-schema.build-date=$BUILD_DATE \
-      org.label-schema.name=$PROJECT_NAME \
-      org.label-schema.vcs-url=$REPO_URL \
-      org.label-schema.vcs-ref=$LAST_COMMIT \
-      org.label-schema.vendor=$VENDOR \
-      org.label-schema.version=$VERSION \
-      org.label-schema.docker.schema-version="1.0"
-
 ARG METRICS_PORT
 ARG HEALTHZ_PORT
 
