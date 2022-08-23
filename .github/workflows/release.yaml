@@ -4,6 +4,9 @@ on:
   push:
     tags: [ '*' ]
 
+env:
+  REGISTRY: ghcr.io
+
 jobs:
   package:
     runs-on: ubuntu-20.04
