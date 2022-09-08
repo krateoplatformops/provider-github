@@ -49,7 +49,7 @@ func NewClient(opts ClientOpts) *Client {
 	}
 
 	if len(opts.ApiURL) > 0 {
-		u, err := url.ParseRequestURI("http://github.insiel.it/api/v3")
+		u, err := url.ParseRequestURI(opts.ApiURL)
 		if err != nil {
 			res.apiUrl = opts.ApiURL
 			res.apiExtraPath = ""
