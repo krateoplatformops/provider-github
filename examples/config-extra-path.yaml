@@ -1,0 +1,13 @@
+apiVersion: github.krateo.io/v1alpha1
+kind: ProviderConfig
+metadata:
+  name: provider-github-demo-config
+spec:
+  apiUrl: https://github.insiel.it/api/v3
+  verbose: true
+  credentials:
+    source: Secret
+    secretRef:
+      namespace: default
+      name: github-secret
+      key: token

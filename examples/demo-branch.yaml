@@ -1,0 +1,11 @@
+apiVersion: github.krateo.io/v1alpha1
+kind: BranchProtection
+metadata:
+  name: provider-github-branch-protection-demo
+spec:
+  forProvider:
+    org: krateoplatformops
+    repo: demo-repo
+    branch: demo-branch
+  providerConfigRef:
+    name: provider-github-demo-config
