@@ -148,5 +148,21 @@ func (e *external) Update(ctx context.Context, mg resource.Managed) (managed.Ext
 }
 
 func (e *external) Delete(ctx context.Context, mg resource.Managed) error {
-	return nil // noop
+	cr, ok := mg.(*repov1alpha1.Repo)
+	if !ok {
+		return errors.New(errNotRepo)
+	}
+
+	cr.SetConditions(xpv1.Deleting())
+
+	spec := cr.Spec.ForProvider.DeepCopy()
+
+	err := e.ghCli.Repos().Create(spec)
+	if err != nil {
+		return err
+	}
+	e.log.Debug("Repo deleted", "org", spec.Org, "name", spec.Name)
+	e.rec.Eventf(cr, corev1.EventTypeNormal, "RepDeleted", "Repo '%s/%s' deleted", spec.Org, spec.Name)
+
+	return nil
 }

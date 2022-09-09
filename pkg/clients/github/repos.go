@@ -87,6 +87,28 @@ func (s *RepoService) Exists(opts *v1alpha1.RepoParams) (bool, error) {
 	return true, nil
 }
 
+// Deleting a repository requires admin access. If OAuth is used, the delete_repo scope is required.
+// https://docs.github.com/en/rest/repos/repos#get-a-repository
+func (s *RepoService) Delete(opts *v1alpha1.RepoParams) error {
+	pt := path.Join(s.apiExtraPath, fmt.Sprintf("repos/%s/%s", opts.Org, opts.Name))
+
+	err := requests.URL(s.apiUrl).Path(pt).
+		Client(s.client).
+		Method(http.MethodDelete).
+		Header("Authorization", fmt.Sprintf("token %s", s.token)).
+		CheckStatus(204).
+		Fetch(context.Background())
+	if err != nil {
+		if requests.HasStatusErr(err, 404) {
+			return nil
+		}
+
+		return err
+	}
+
+	return nil
+}
+
 func (s *RepoService) isOrg(owner string) (bool, error) {
 	pt := path.Join(s.apiExtraPath, fmt.Sprintf("/orgs/%s", owner))
 	err := requests.URL(s.apiUrl).Path(pt).
