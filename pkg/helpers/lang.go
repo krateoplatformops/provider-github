@@ -61,6 +61,15 @@ func BoolValue(v *bool) bool {
 	return *v
 }
 
+// BoolValueOrDefault sets eventually a default value for bool type.
+func BoolValueOrDefault(v *bool, def bool) bool {
+	if v == nil {
+		return false
+	}
+
+	return def
+}
+
 // StringPtr converts the supplied string to a pointer to that string.
 func StringPtr(p string) *string { return &p }
 
@@ -111,14 +120,6 @@ func LateInitializeBool(b *bool, from bool) *bool {
 		return b
 	}
 	return &from
-}
-
-// BoolOrDefault sets eventually a default value for bool type.
-func BoolOrDefault(b *bool, def bool) *bool {
-	if b != nil {
-		return b
-	}
-	return &def
 }
 
 // Int32OrDefault sets eventually a default value for int32 type.

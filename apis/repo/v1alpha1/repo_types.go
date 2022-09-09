@@ -16,8 +16,11 @@ type RepoParams struct {
 
 	// Private: whether the repository is private (default: true).
 	// +optional
-	// +immutable
 	Private bool `json:"private,omitempty"`
+
+	// Initialize: whether the repository must be initialized (default: true).
+	// +optional
+	Initialize *bool `json:"initialize,omitempty"`
 }
 
 type RepoObservation struct {

@@ -58,6 +58,10 @@ spec:
                 type: string
               forProvider:
                 properties:
+                  initialize:
+                    description: 'Initialize: whether the repository must be initialized
+                      (default: true).'
+                    type: boolean
                   name:
                     description: 'Name: the name of the repository.'
                     type: string

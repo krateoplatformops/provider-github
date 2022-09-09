@@ -9,6 +9,7 @@ import (
 
 	"github.com/carlmjohnson/requests"
 	"github.com/krateoplatformops/provider-github/apis/repo/v1alpha1"
+	"github.com/krateoplatformops/provider-github/pkg/helpers"
 )
 
 // RepoService provides methods for creating and reading repositories.
@@ -49,7 +50,7 @@ func (s *RepoService) Create(opts *v1alpha1.RepoParams) error {
 		BodyJSON(map[string]interface{}{
 			"name":      opts.Name,
 			"private":   opts.Private,
-			"auto_init": true,
+			"auto_init": helpers.BoolValueOrDefault(opts.Initialize, true),
 		}).
 		AddValidator(ErrorJSON(githubError, 201)).
 		Fetch(context.Background())
