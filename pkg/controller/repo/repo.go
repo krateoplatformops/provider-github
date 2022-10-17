@@ -157,7 +157,7 @@ func (e *external) Delete(ctx context.Context, mg resource.Managed) error {
 
 	spec := cr.Spec.ForProvider.DeepCopy()
 
-	err := e.ghCli.Repos().Create(spec)
+	err := e.ghCli.Repos().Delete(spec)
 	if err != nil {
 		return err
 	}
