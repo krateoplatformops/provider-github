@@ -28,5 +28,5 @@ jobs:
           source_files: ${{ github.event.repository.name }}.md
           remote_repository: https://github.com/krateoplatformops/krateo-docs
           access_token: ${{ secrets.HELM_CHARTS_BOT }}
-          target_dir: docs/${{ env.SUB_FOLDER }}s
+          target_dir: docs/providers/${{ env.SUB_FOLDER }}s
           target_branch: main

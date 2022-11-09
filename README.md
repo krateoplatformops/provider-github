@@ -58,6 +58,7 @@ spec:
 EOF
 ```
 
+
 ### Configure the `Repo` CRD instance
 
 ```sh
