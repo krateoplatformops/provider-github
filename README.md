@@ -4,10 +4,6 @@
 
 This is a Kubernetes Operator (Crossplane provider) that creates a GitHub repository.
 
-The provider that is built from the source code in this repository adds the following new functionality:
-
-- a Custom Resource Definition (CRD) that model git repositories github
-
 ## Getting Started
 
 With Crossplane installed in your cluster:
@@ -20,13 +16,63 @@ $ helm install crossplane --namespace crossplane-system crossplane-stable/crossp
 
 ### Install this provider
 
-Before installing the below manifest:
+Install the below manifest:
 
-- [replace `VERSION` with latest or your preferred provider version](./examples/provider.yaml)
+```sh
+cat <<EOF | kubectl apply -f -
+apiVersion: pkg.crossplane.io/v1
+kind: Provider
+metadata:
+  namespace: krateo-system
+  name: provider-github
+spec:
+  package: 'ghcr.io/krateoplatformops/provider-github:VERSION'
+  packagePullPolicy: IfNotPresent
+EOF
+```
+
+!!! note ""
+
+   replace `VERSION` with [latest provider tag](https://github.com/krateoplatformops/provider-github/tags)
+
+### Configure the provider
+
+```sh
+cat <<EOF | kubectl apply -f -
+apiVersion: github.krateo.io/v1alpha1
+kind: ProviderConfig
+metadata:
+  name: provider-github-demo-config
+spec:
+  # URL to Github API
+  apiUrl: https://github.yourdomain.it/api/v3
+  # Set verbose true to dump all client requests
+  verbose: true
+  # The secret with your Github PAT
+  credentials:
+    source: Secret
+    secretRef:
+      namespace: default
+      name: github-secret
+      key: token
+EOF
+```
 
 ### Configure the `Repo` CRD instance
 
-You can found example manifest files here:
-
-- provider config [config.yaml](./examples/config.yaml)
-- crd instance [example.yaml](./examples/example.yaml)
+```sh
+cat <<EOF | kubectl apply -f -
+apiVersion: github.krateo.io/v1alpha1
+kind: Repo
+metadata:
+  name: provider-github-demo
+spec:
+  forProvider:
+    # Github Owner
+    org: krateoplatformops
+    # Repository name
+    name: demo-repo
+  providerConfigRef:
+    name: provider-github-demo-config
+EOF
+```
